@@ -16,24 +16,22 @@ const { NotImplementedError } = require('../extensions/index.js');
  *
  */
 function repeater(str, options) {
-  let newStr = [];
-
-  if (!options.separator) options.separator = '+'
-  if (!options.additionSeparator) options.additionSeparator = '|';
-  if (typeof str != 'string') str = String(str);
-  if (typeof options.addition != 'string') options.addition = String(options.addition);
-
-  for (let j = 0; j < options.additionRepeatTimes; j++){
-    newStr.push(options.addition); 
-  }
-    let subStr = newStr.join(options.additionSeparator);
-    newStr = [];
-
-  for (let i = 0; i < options.repeatTimes; i++){
-		newStr.push(str + subStr);
-	}
-  return newStr.join(options.separator);
-};
+  if (!options.hasOwnProperty('separator')) {
+		options.separator = '+';
+	 }
+	 if (!options.hasOwnProperty('additionSeparator') && options.hasOwnProperty('additionRepeatTimes')) {
+		options.additionSeparator = '|';
+	 }
+	 if (options.hasOwnProperty('addition') && options.addition === null) {
+			options.addition = 'null';
+	 }
+	 let addArr = new Array(options.additionRepeatTimes).fill(options.addition);
+	 let addStr = addArr.join(options.additionSeparator);
+	 let partStr = str + addStr;
+	 let resultArr = new Array(options.repeatTimes).fill(partStr);
+	 let result = resultArr.join(options.separator);
+  return result;
+}
 
 module.exports = {
   repeater
